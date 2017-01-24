@@ -5,6 +5,7 @@
 #include <iostream>
 
 namespace eigen {
+
 class Matrix {
 
 public:
@@ -15,6 +16,8 @@ public:
   double getValue(int row, int column);
   bool isSquare();
   double det();
+  int getRows();
+  int getColumns();
   Matrix inverse();
   Matrix rref();
   

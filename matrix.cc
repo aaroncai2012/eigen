@@ -2,6 +2,7 @@
 
 namespace eigen {
 
+  // constructor that takes in two integers for the dimensions of this matrix
   Matrix::Matrix(int r, int c) {
     columns = c;
     r = rows;
@@ -18,6 +19,7 @@ namespace eigen {
     }
   }
 
+  //displays this matrix on the command line
   void Matrix::printOut() {
     std::cout << "Print out a " 
               << rows 
@@ -33,16 +35,42 @@ namespace eigen {
     }
   }
 
+  //inserts a number into the matrix at a specified location
   void Matrix::insert(int row, int column, double value) {
-    m[row][column] = value;
+    if(row >= rows || column >= columns) {
+      return;
+    }
+    m[row+1][column+1] = value;
   }
 
+  //obtains a number from the matrix at a specified location
   double Matrix::getValue(int row, int column) {
-    return m[row][column];
+    if (row >= rows || column >= columns) {
+      return 0;
+    }
+    return m[row+1][column+1];
   }
 
+  //a check for whether the matrix is a square or not
   bool Matrix::isSquare() {
     return (columns == rows);
   }
 
+  //obtains the number of rows of this matrix
+  int Matrix::getRows() {
+    return rows;
+  }
+  
+  //obtains the number of columns of this matrix
+  int Matrix::getColumns() {
+    return columns;
+  }
+
+  //calculates the determinate of this matrix if it is square
+  double Matrix::det() {
+    if (isSquare()) {
+      return 0;
+    }
+
+  }
 } //namespace eigen
