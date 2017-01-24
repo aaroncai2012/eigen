@@ -14,6 +14,9 @@ public:
   void insert(int row, int column, double value);
   double getValue(int row, int column);
   bool isSquare();
+  double det();
+  Matrix inverse();
+  Matrix rref();
   
 private:
 

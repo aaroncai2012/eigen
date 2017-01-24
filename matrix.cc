@@ -2,7 +2,7 @@
 
 namespace eigen {
 
-  Matrix(int r, int c) {
+  Matrix::Matrix(int r, int c) {
     columns = c;
     r = rows;
     if (isSquare()) {
@@ -16,6 +16,33 @@ namespace eigen {
         m.emplace_back(temp);
       }
     }
+  }
+
+  void Matrix::printOut() {
+    std::cout << "Print out a " 
+              << rows 
+              << " x " 
+              << columns  
+              << " matrix." 
+              << std::endl;
+    for(int i = 0; i < rows; ++i) {
+      for (int j = 0 ; j < columns; ++j){
+        std::cout << m[i][j] << ' ';
+      }
+      std::cout << std::endl;
+    }
+  }
+
+  void Matrix::insert(int row, int column, double value) {
+    m[row][column] = value;
+  }
+
+  double Matrix::getValue(int row, int column) {
+    return m[row][column];
+  }
+
+  bool Matrix::isSquare() {
+    return (columns == rows);
   }
 
 } //namespace eigen
