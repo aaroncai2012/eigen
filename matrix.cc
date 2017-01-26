@@ -5,7 +5,7 @@ namespace eigen {
   // constructor that takes in two integers for the dimensions of this matrix
   Matrix::Matrix(int r, int c) {
     columns = c;
-    r = rows;
+    rows = r;
     if (isSquare()) {
       for (int i = 0; i < rows; ++i) {
         std::vector<double> temp;
@@ -37,18 +37,19 @@ namespace eigen {
 
   //inserts a number into the matrix at a specified location
   void Matrix::insert(int row, int column, double value) {
-    if(row >= rows || column >= columns) {
+    if(row > rows || column > columns) {
       return;
     }
-    m[row+1][column+1] = value;
+    m[row-1][column-1] = value;
+    std::cout << "succesfully inserted " << value << " into row " << row << ", column " << column << std::endl;
   }
 
   //obtains a number from the matrix at a specified location
   double Matrix::getValue(int row, int column) {
-    if (row >= rows || column >= columns) {
+    if (row > rows || column > columns) {
       return 0;
     }
-    return m[row+1][column+1];
+    return m[row-1][column-1];
   }
 
   //a check for whether the matrix is a square or not
