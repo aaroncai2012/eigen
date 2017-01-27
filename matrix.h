@@ -11,19 +11,24 @@ class Matrix {
 public:
 
   Matrix(int r, int c);
+  Matrix(int dimension);
+  Matrix(std::vector<std::vector<double>> target);
   void printOut();
   void insert(int row, int column, double value);
   double getValue(int row, int column);
   bool isSquare();
-  double det();
   int getRows();
   int getColumns();
+  Matrix minorOf(int row, int column);
+  double det();
   Matrix inverse();
+  Matrix operator*(Matrix& B);
   Matrix rref();
+  double calculateEigenValue();
   
 private:
 
-  std::vector<std::vector<double> > m;
+  std::vector<std::vector<double>> m;
   int columns;
   int rows;
 
