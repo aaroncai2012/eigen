@@ -2,8 +2,7 @@
 
 eigen: eigen.exe
 
-eigen.exe: source.cc		\
-		matrix.cc 
+eigen.exe: source.cc
 	@if [ ! -d "./bin" ]; then mkdir ./bin; fi
 	g++  -std=c++11 $^ -o bin/eigen.exe 
 
