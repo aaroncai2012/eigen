@@ -18,6 +18,7 @@ namespace eigen {
 
   template<class T>
   Matrix<T>::Matrix(std::pair<int, int> dimension)  : Matrix(dimension.first, dimension.second) {}
+
   template<class T>
   Matrix<T>::Matrix(int dimension) : Matrix(dimension, dimension){}
 
@@ -91,6 +92,34 @@ namespace eigen {
     return columns;
   }
 
+  template<class T>
+  std::pair<int, int> Matrix<T>::getDimension() {
+    return std::make_pair(rows, columns);
+  }
+
+  //the transposed version of a matrix is the matrix reflected across the y = -x axis
+  template<class T>
+  Matrix<T> Matrix<T>::transpose() {
+    Matrix<T> result(std::make_pair(getDimension().second, getDimension().first));
+    for(int i = 0; i < getDimension().first; ++i) {
+      for(int j = 0; j < getDimension().second; ++j) {
+        result.insert(std::make_pair(j, i), getValue(std::make_pair(i, j)));
+      }
+    }
+    return result;
+  }
+
+  //returns the minor of a matrix
+  template<class T>
+  Matrix<T> Matrix<T>::minorOf(std::pair<int, int> location) {
+    std::vector<std::vector<T>> output(m);
+    output.erase(output.begin() + location.first);
+    for(int i = 0; i < rows-1; ++i) {
+      output[i].erase(output[i].begin() + location.second);
+    }
+    return Matrix<T>(output);
+  }
+
   //calculates the determinate of this matrix if it is square
   template<class T>
   double Matrix<T>::det() {
@@ -114,15 +143,12 @@ namespace eigen {
   }
 
   template<class T>
-  Matrix<T> Matrix<T>::minorOf(std::pair<int, int> location) {
-    std::vector<std::vector<T>> output(m);
-    output.erase(output.begin() + location.first);
-    for(int i = 0; i < rows-1; ++i) {
-      output[i].erase(output[i].begin() + location.second);
-    }
-    return Matrix<T>(output);
+  Matrix<T> Matrix<T>::inverse() {
+    double determinate = det();
+
   }
 
+  //multiplication of a matrix and another matrix
   template<class T>
   Matrix<T> Matrix<T>::operator*(Matrix& B) { Matrix product(rows, B.getColumns());
     for(int i = 0; i < product.getRows(); ++i) {
@@ -138,11 +164,22 @@ namespace eigen {
     return product;
   }
 
+  //multiplication of a matrix and a double
+  template<class T>
+    Matrix<T> Matrix<T>::operator*(double num) {
+      Matrix<T> product(std::make_pair(getDimension()));
+      for(int i = 0; i < getDimension().first; ++i) {
+        for(int j = 0; j < getDimension().second; ++j) {
+          product.insert(std::make_pair(i, j), getValue(std::make_pair(i, j)));
+        }
+      }
+    }
+
   template<class T>
   double Matrix<T>::magnitude() {
     double value = 0;
     for(int i = 0; i < columns; ++i) {
-      value += (getValue(make_pair(0, i)) * getValue(make_pair(0, i)));
+      value += (getValue(std::make_pair(0, i)) * getValue(std::make_pair(0, i)));
     }
     return std::sqrt(value);
   }

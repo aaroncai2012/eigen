@@ -22,10 +22,12 @@ public:
   int getRows();
   int getColumns();
   std::pair<int, int> getDimension();
+  Matrix<T> transpose();
   Matrix<T> minorOf(std::pair<int, int> location);
   double det();
   Matrix<T> inverse();
-  Matrix<T> operator*(Matrix& B);
+  Matrix<T> operator*(Matrix<T>& B);
+  Matrix<T> operator*(double num);
   Matrix<T> rref();
   double calculateEigenValue();
   
