@@ -28,12 +28,15 @@ public:
   Matrix<T> inverse();
   Matrix<T> operator*(Matrix<T>& B);
   Matrix<T> operator*(double num);
+  Matrix<T> operator/ (Matrix<T> B);
+  Matrix<T> operator/ (double num);
   Matrix<T> rref();
+  Matrix<T> calculateEigenvector(Matrix<T> b0);
   double calculateEigenValue();
+  double magnitude();
   
 private:
 
-  double magnitude();
   std::vector<std::vector<T>> m;
   int columns;
   int rows;

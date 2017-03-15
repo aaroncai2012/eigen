@@ -145,7 +145,19 @@ namespace eigen {
   template<class T>
   Matrix<T> Matrix<T>::inverse() {
     double determinate = det();
+    Matrix<T> output(std::make_pair(getDimension().first, getDimension().second));
+    int rowSign = 1;
+    for(int i = 0; i < rows; ++i) {
+      for(int j = 0; j < columns; ++j) {
+        output.insert(std::make_pair(i, j), (rowSign) * (minorOf(std::make_pair(i, j))).det());
+        rowSign *= -1;
+      }
+      if (columns % 2 == 0) { rowSign *= -1; }
+    }
+    output = output.transpose();
+    Matrix<T> output2(output * (1/ determinate));
 
+    return output2;
   }
 
   //multiplication of a matrix and another matrix
@@ -166,22 +178,76 @@ namespace eigen {
 
   //multiplication of a matrix and a double
   template<class T>
-    Matrix<T> Matrix<T>::operator*(double num) {
-      Matrix<T> product(std::make_pair(getDimension()));
-      for(int i = 0; i < getDimension().first; ++i) {
-        for(int j = 0; j < getDimension().second; ++j) {
-          product.insert(std::make_pair(i, j), getValue(std::make_pair(i, j)));
-        }
+  Matrix<T> Matrix<T>::operator*(double num) {
+    Matrix<T> product(getDimension());
+    for(int i = 0; i < getDimension().first; ++i) {
+      for(int j = 0; j < getDimension().second; ++j) {
+        product.insert(std::make_pair(i, j), getValue(std::make_pair(i, j)) * num);
       }
     }
+    return product;
+  } 
+
+  //multiplication of a matrix and another's inverse
+  template<class T>
+  Matrix<T> Matrix<T>::operator/ (Matrix<T> B) {
+    Matrix<T> temp(B.inverse());
+    return this->operator*(temp);
+  }
+
+  template<class T>
+  Matrix<T> Matrix<T>::operator/ (double num) {
+    if (num != 0) {
+      return this->operator*(1/num);
+    }
+  }
 
   template<class T>
   double Matrix<T>::magnitude() {
     double value = 0;
-    for(int i = 0; i < columns; ++i) {
-      value += (getValue(std::make_pair(0, i)) * getValue(std::make_pair(0, i)));
+    for(int i = 0; i < rows; ++i) {
+      value += static_cast<double>((getValue(std::make_pair(i, 0))) * getValue(std::make_pair(i, 0)));
     }
     return std::sqrt(value);
+  }
+
+  template<class T>
+  Matrix<T> Matrix<T>::calculateEigenvector(Matrix<T> b0) {
+
+    double epsilon = 0.001;
+    double difference = 1;
+    int count = 0;
+    double previousMag = b0.magnitude();
+    Matrix<T> b(b0);
+    while(count < 100) {
+
+      Matrix<T> ab(this->operator*(b));
+
+      std::cout << "product matrix: " << std::endl;
+      ab.printOut();
+
+      double abMag = ab.magnitude();
+
+      std::cout << "magnitude of product matrix" << abMag << std::endl;
+
+      b = (ab / abMag);
+      double bMag = b.magnitude();
+
+      std::cout << "normalized matrix: " << std::endl;
+      b.printOut();
+
+      std::cout << "normalized matrix's magnitude: " << bMag << std::endl;
+
+      difference = bMag - previousMag;
+      previousMag = bMag;
+
+      std::cout << "---------------------------------------------------" << std::endl;
+
+      count++;
+    }
+
+    return b;
+
   }
 
   template<class T>
